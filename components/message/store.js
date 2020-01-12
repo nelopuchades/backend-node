@@ -9,14 +9,19 @@ db.connect('mongodb+srv://db_user:4W2vv9SluC2Pms3D@cluster0-vdlpx.mongodb.net/te
 console.log('[db] Conectada con éxito')
 
 function addMessage(message) {
-    //list.push(message);
     const myMessage = new Model(message);
     myMessage.save();
 }
 
-async function getMessages() {
-    //return list;
-    const messages = await Model.find();
+async function getMessages(filterUser) {
+
+    let filter = {};
+
+    if (filterUser !== null){
+        filter = { user: filterUser };
+    }
+
+    const messages = await Model.find(filter);
     return messages;
 }
 
@@ -30,11 +35,17 @@ async function updateText(id, message) {
     return newMessage;
 }
 
+function removeMessage(id) {
+    return Model.deleteOne({
+        _id: id
+    });
+}
+
 module.exports = {
     add: addMessage,
     list: getMessages,
-    update: updateText
+    update: updateText,
+    remove: removeMessage
     //get
     //update
-    //delete
 }
